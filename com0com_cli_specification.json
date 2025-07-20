@@ -1,0 +1,414 @@
+{
+  "cli_tool": "com0com setupc.exe",
+  "description": "Command-line interface for managing virtual serial port pairs",
+  
+  "global_options": {
+    "output": {
+      "flag": "--output",
+      "type": "string",
+      "description": "File for output, default is console",
+      "example": "--output logfile.txt"
+    },
+    "wait": {
+      "flag": "--wait",
+      "type": "string",
+      "description": "Wait <to> seconds for install completion. Use '+' prefix to prompt user after timeout",
+      "example": "--wait 30 or --wait +30",
+      "default": "0"
+    },
+    "detail_prms": {
+      "flag": "--detail-prms",
+      "type": "boolean",
+      "description": "Show detailed parameters"
+    },
+    "silent": {
+      "flag": "--silent", 
+      "type": "boolean",
+      "description": "Suppress dialogs if possible"
+    },
+    "no_update": {
+      "flag": "--no-update",
+      "type": "boolean", 
+      "description": "Do not update driver during install (for batch operations)"
+    },
+    "no_update_fnames": {
+      "flag": "--no-update-fnames",
+      "type": "boolean",
+      "description": "Do not update friendly names"
+    },
+    "show_fnames": {
+      "flag": "--show-fnames",
+      "type": "boolean",
+      "description": "Show friendly names activity"
+    }
+  },
+
+  "commands": {
+    "port_management": {
+      "install_numbered": {
+        "syntax": "install <n> <prmsA> <prmsB>",
+        "description": "Install port pair with specific number",
+        "parameters": {
+          "n": {
+            "type": "integer",
+            "description": "Port pair number",
+            "example": "0, 1, 2..."
+          },
+          "prmsA": {
+            "type": "parameter_string",
+            "description": "Parameters for first port (CNCA<n>)"
+          },
+          "prmsB": {
+            "type": "parameter_string", 
+            "description": "Parameters for second port (CNCB<n>)"
+          }
+        },
+        "example": "install 0 PortName=COM8 PortName=COM9"
+      },
+      "install_auto": {
+        "syntax": "install <prmsA> <prmsB>",
+        "description": "Install port pair with auto-assigned number",
+        "parameters": {
+          "prmsA": {
+            "type": "parameter_string",
+            "description": "Parameters for first port"
+          },
+          "prmsB": {
+            "type": "parameter_string",
+            "description": "Parameters for second port"
+          }
+        },
+        "example": "install - -"
+      },
+      "install_update": {
+        "syntax": "install",
+        "description": "Update driver after --no-update install commands",
+        "parameters": {}
+      },
+      "remove": {
+        "syntax": "remove <n>",
+        "description": "Remove port pair by number",
+        "parameters": {
+          "n": {
+            "type": "integer",
+            "description": "Port pair number to remove"
+          }
+        },
+        "example": "remove 0"
+      },
+      "change": {
+        "syntax": "change <portid> <prms>",
+        "description": "Modify port parameters",
+        "parameters": {
+          "portid": {
+            "type": "string",
+            "description": "Port identifier (e.g., CNCA0, CNCB0)",
+            "pattern": "CNC[AB]\\d+"
+          },
+          "prms": {
+            "type": "parameter_string",
+            "description": "New parameters to set"
+          }
+        },
+        "example": "change CNCA0 EmuBR=yes,EmuOverrun=yes"
+      },
+      "list": {
+        "syntax": "list",
+        "description": "Show all ports with identifiers and parameters",
+        "parameters": {},
+        "returns": "List of port configurations"
+      }
+    },
+    
+    "driver_management": {
+      "preinstall": {
+        "syntax": "preinstall",
+        "description": "Preinstall driver",
+        "parameters": {}
+      },
+      "update": {
+        "syntax": "update", 
+        "description": "Update driver",
+        "parameters": {}
+      },
+      "reload": {
+        "syntax": "reload",
+        "description": "Reload driver", 
+        "parameters": {}
+      },
+      "uninstall": {
+        "syntax": "uninstall",
+        "description": "Uninstall all ports and driver",
+        "parameters": {}
+      }
+    },
+
+    "port_control": {
+      "disable_all": {
+        "syntax": "disable all",
+        "description": "Disable all ports in current hardware profile",
+        "parameters": {}
+      },
+      "enable_all": {
+        "syntax": "enable all", 
+        "description": "Enable all ports in current hardware profile",
+        "parameters": {}
+      }
+    },
+
+    "utilities": {
+      "infclean": {
+        "syntax": "infclean",
+        "description": "Clean old INF files", 
+        "parameters": {}
+      },
+      "busynames": {
+        "syntax": "busynames <pattern>",
+        "description": "Show names that match pattern and are already in use",
+        "parameters": {
+          "pattern": {
+            "type": "string",
+            "description": "Name pattern with wildcards (* and ?)",
+            "example": "COM?*"
+          }
+        }
+      },
+      "updatefnames": {
+        "syntax": "updatefnames",
+        "description": "Update friendly names",
+        "parameters": {}
+      },
+      "listfnames": {
+        "syntax": "listfnames", 
+        "description": "Show identifiers and friendly names for buses and ports",
+        "parameters": {}
+      },
+      "help": {
+        "syntax": "help",
+        "description": "Print help information",
+        "parameters": {}
+      },
+      "quit": {
+        "syntax": "quit",
+        "description": "Exit the tool",
+        "parameters": {}
+      }
+    }
+  },
+
+  "port_parameters": {
+    "basic": {
+      "PortName": {
+        "type": "string",
+        "description": "Set port name",
+        "default": "port identifier",
+        "special_values": {
+          "COM#": "Use Ports class installer to auto-assign COM port number"
+        },
+        "example": "PortName=COM8"
+      },
+      "RealPortName": {
+        "type": "string", 
+        "description": "Change real port name for COM# ports",
+        "requires": "PortName=COM#",
+        "example": "RealPortName=COM3"
+      }
+    },
+
+    "emulation": {
+      "EmuBR": {
+        "type": "boolean",
+        "values": ["yes", "no"],
+        "default": "no",
+        "description": "Enable/disable baud rate emulation to paired port"
+      },
+      "EmuOverrun": {
+        "type": "boolean", 
+        "values": ["yes", "no"],
+        "default": "no",
+        "description": "Enable/disable buffer overrun"
+      },
+      "EmuNoise": {
+        "type": "float",
+        "range": "0-0.99999999",
+        "default": "0",
+        "description": "Probability of error per character frame to paired port"
+      }
+    },
+
+    "timing": {
+      "AddRTTO": {
+        "type": "integer",
+        "unit": "milliseconds", 
+        "default": "0",
+        "description": "Add milliseconds to total timeout for read operations"
+      },
+      "AddRITO": {
+        "type": "integer",
+        "unit": "milliseconds",
+        "default": "0", 
+        "description": "Add milliseconds to max time between character arrivals for read operations"
+      }
+    },
+
+    "modes": {
+      "PlugInMode": {
+        "type": "boolean",
+        "values": ["yes", "no"],
+        "default": "no",
+        "description": "Hide port until paired port opens"
+      },
+      "ExclusiveMode": {
+        "type": "boolean",
+        "values": ["yes", "no"], 
+        "default": "no",
+        "description": "Hide port when it is open"
+      },
+      "HiddenMode": {
+        "type": "boolean",
+        "values": ["yes", "no"],
+        "default": "no",
+        "description": "Hide from port enumerators"
+      },
+      "AllDataBits": {
+        "type": "boolean",
+        "values": ["yes", "no"],
+        "default": "no",
+        "description": "Transfer all data bits regardless of data bits setting"
+      }
+    },
+
+    "pin_wiring": {
+      "cts": {
+        "type": "pin_assignment",
+        "default": "rrts",
+        "description": "Wire CTS pin to specified signal"
+      },
+      "dsr": {
+        "type": "pin_assignment", 
+        "default": "rdtr",
+        "description": "Wire DSR pin to specified signal"
+      },
+      "dcd": {
+        "type": "pin_assignment",
+        "default": "rdtr",
+        "description": "Wire DCD pin to specified signal"
+      },
+      "ri": {
+        "type": "pin_assignment",
+        "default": "!on",
+        "description": "Wire RI pin to specified signal"
+      }
+    }
+  },
+
+  "data_types": {
+    "parameter_string": {
+      "description": "Comma-separated parameter assignments",
+      "format": "<param>=<value>[,<param>=<value>...]",
+      "special_values": {
+        "-": "Use driver defaults for all parameters",
+        "*": "Use current settings for all parameters"
+      },
+      "example": "PortName=COM8,EmuBR=yes,EmuOverrun=yes"
+    },
+    
+    "pin_assignment": {
+      "description": "Pin wiring assignment with optional inversion",
+      "format": "[!]<pin_value>",
+      "values": [
+        "rrts", "lrts", "rdtr", "ldtr", 
+        "rout1", "lout1", "rout2", "lout2",
+        "ropen", "lopen", "on"
+      ],
+      "inversion": "Prefix with '!' to invert signal",
+      "special_values": {
+        "-": "Use driver default",
+        "*": "Use current setting"
+      },
+      "value_descriptions": {
+        "rrts": "Remote RTS",
+        "lrts": "Local RTS", 
+        "rdtr": "Remote DTR",
+        "ldtr": "Local DTR",
+        "rout1": "Remote OUT1",
+        "lout1": "Local OUT1",
+        "rout2": "Remote OUT2", 
+        "lout2": "Local OUT2",
+        "ropen": "Logical ON if remote port is open",
+        "lopen": "Logical ON if local port is open",
+        "on": "Logical ON"
+      }
+    }
+  },
+
+  "environment_variables": {
+    "installer": {
+      "CNC_INSTALL_START_MENU_SHORTCUTS": {
+        "values": ["YES", "NO"],
+        "description": "Control Start Menu shortcuts creation"
+      },
+      "CNC_INSTALL_CNCA0_CNCB0_PORTS": {
+        "values": ["YES", "NO"], 
+        "description": "Control default CNCA0/CNCB0 port pair creation"
+      },
+      "CNC_INSTALL_COMX_COMX_PORTS": {
+        "values": ["YES", "NO"],
+        "description": "Control COM# port creation"
+      },
+      "CNC_INSTALL_SKIP_SETUP_PREINSTALL": {
+        "values": ["YES", "NO"],
+        "description": "Skip driver preinstall/update during setup"
+      }
+    },
+    "uninstaller": {
+      "CNC_UNINSTALL_SKIP_SETUP_UNINSTALL": {
+        "values": ["YES", "NO"],
+        "description": "Skip device and driver uninstall"
+      }
+    }
+  },
+
+  "usage_patterns": {
+    "basic_port_creation": [
+      "install - -",
+      "install PortName=COM2 PortName=COM4"
+    ],
+    "batch_installation": [
+      "--no-update install - -",
+      "--no-update install - -", 
+      "install"
+    ],
+    "port_configuration": [
+      "change CNCA0 EmuBR=yes,EmuOverrun=yes",
+      "change CNCB0 PlugInMode=yes"
+    ],
+    "system_management": [
+      "list",
+      "remove 0", 
+      "reload"
+    ]
+  },
+
+  "gui_design_considerations": {
+    "command_grouping": [
+      "Port Management (install, remove, change, list)",
+      "Driver Operations (preinstall, update, reload, uninstall)",
+      "System Control (enable/disable all)",
+      "Utilities (busynames, friendly names, cleanup)"
+    ],
+    "form_elements": {
+      "boolean_parameters": "Checkboxes",
+      "string_parameters": "Text inputs",
+      "numeric_parameters": "Number inputs with validation",
+      "pin_assignments": "Dropdowns with invert checkboxes",
+      "parameter_strings": "Key-value pair editors"
+    },
+    "validation_requirements": [
+      "Port numbers must be integers",
+      "EmuNoise must be 0-0.99999999",
+      "Pin values must be from valid list", 
+      "Port identifiers must match CNC[AB]\\d+ pattern"
+    ]
+  }
+}
