@@ -36,18 +36,6 @@ A Windows GUI application for managing com0com virtual serial ports, built with 
 2. Run as administrator (UAC elevation required)
 3. Install com0com driver if needed ([download here](https://sourceforge.net/projects/com0com/))
 4. Launch the executable directly
-
-**For Developers**
-```bash
-git clone <repository-url>
-cd Serial
-pip install -r scripts/requirements-build.txt
-python main.py
-```
-
-**Build Executable**
-```bash
-python build.py
 ```
 
 ## Architecture
@@ -125,13 +113,6 @@ Settings are stored in JSON format at:
 ```
 %LOCALAPPDATA%\com0com-gui\config.json
 ```
-
-**Configurable Options**
-- setupc.exe path specification
-- Command execution timeout
-- Window geometry persistence
-- Logging level
-
 **Setup Wizard**
 The application includes a first-time setup wizard that:
 1. Detects com0com driver installation
@@ -144,7 +125,7 @@ The application includes a first-time setup wizard that:
 **Code Standards**
 - PyQt6 framework with type hints throughout
 - Qt signal-slot architecture for component communication
-- Model-View-Controller pattern for clean separation
+- Model-View-Controller pattern for separation
 - QThread workers for non-blocking operations
 - Comprehensive error handling
 
@@ -160,44 +141,9 @@ The application includes a first-time setup wizard that:
 - Use QThread for blocking operations
 - Provide real-time user feedback
 - Support high DPI displays
-
-## Troubleshooting
-
-**Common Issues**
-
-**setupc.exe Not Found**
-- Solution: Install com0com or specify path in Settings
-- Check: Verify com0com installation completed
-
-**Permission Denied**
-- Solution: Run as administrator
-- Cause: Driver operations require elevated privileges
-
-**Port Already Exists**
-- Solution: Use different port number or remove existing
-- Alternative: Use COM# for automatic assignment
-
-**Driver Not Detected**
-- Solution: Restart after com0com installation
-- Check: Device Manager for com0com devices
-
+- 
 **Logs**
 Error logs stored at: `%LOCALAPPDATA%\com0com-gui\logs\error.log`
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make changes and test manually
-4. Ensure build succeeds
-5. Submit a pull request
-
-**Development Setup**
-```bash
-pip install -r scripts/requirements-build.txt
-python main.py    # Run application
-python build.py   # Test build process
-```
 
 ## Related Projects
 
@@ -205,10 +151,5 @@ python build.py   # Test build process
 - [PyQt6](https://doc.qt.io/qtforpython/) - Python GUI framework
 - [setupc.exe Documentation](readme_com0com) - Command reference
 
-## License
 
-MIT License - see [LICENSE.txt](LICENSE.txt) for details.
-
----
-
-**Note**: This application is a GUI wrapper for com0com and requires the com0com driver to be installed separately. com0com is developed and maintained by the com0com project team.
+**Note**: This application is a GUI wrapper for com0com and requires the com0com driver to be installed separately. com0com is developed and maintained by the com0com project.
