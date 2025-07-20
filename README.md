@@ -2,6 +2,10 @@
 
 A Windows GUI application for managing com0com virtual serial ports, built with PyQt6. Provides a modern ribbon interface to wrap com0com's setupc.exe command-line tool.
 
+
+<img width="1368" height="736" alt="com0com screenshot 1" src="https://github.com/user-attachments/assets/f62a34a7-3152-4368-bbe3-793f13a06227" />
+
+
 ## Features
 
 - **Modern Interface**: Windows 10/11-style ribbon with SVG icons
