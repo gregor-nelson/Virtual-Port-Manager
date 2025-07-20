@@ -5,6 +5,7 @@ A Windows GUI application for managing com0com virtual serial ports, built with 
 
 <img width="1368" height="736" alt="com0com screenshot 1" src="https://github.com/user-attachments/assets/f62a34a7-3152-4368-bbe3-793f13a06227" />
 
+<img width="1374" height="736" alt="com0com screenshot 2" src="https://github.com/user-attachments/assets/ebad7242-202f-41ae-a8c4-2d39696147f7" />
 
 ## Features
 
