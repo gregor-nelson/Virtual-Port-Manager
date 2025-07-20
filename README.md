@@ -1,4 +1,4 @@
-# com0com GUI Manager
+# com0com Virtual Port Manager
 
 A Windows GUI application for managing com0com virtual serial ports, built with PyQt6. Provides a modern ribbon interface to wrap com0com's setupc.exe command-line tool.
 
