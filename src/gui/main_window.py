@@ -21,6 +21,7 @@ from .dialogs.new_port_dialog import NewPortDialog
 from .dialogs.configure_dialog import ConfigurePortDialog
 from .dialogs.driver_ops_dialog import DriverOperationsDialog
 from .dialogs.help_dialog import HelpDialog
+from .dialogs.about_dialog import AboutDialog
 
 
 class MainWindow(QMainWindow):
@@ -502,14 +503,7 @@ class MainWindow(QMainWindow):
     
     def show_about_dialog(self):
         """Show about dialog."""
-        QMessageBox.about(
-            self,
-            "About com0com Manager",
-            "com0com Manager v1.0.0\n\n"
-            "A PyQt6-based GUI wrapper for com0com's setupc.exe command-line tool.\n\n"
-            "com0com is a virtual serial port driver that creates pairs of virtual COM ports "
-            "for Windows development and testing."
-        )
+        AboutDialog.show_about(self)
     
     def copy_to_clipboard(self, text: str):
         """Copy text to system clipboard."""
