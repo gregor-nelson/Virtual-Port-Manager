@@ -99,14 +99,6 @@ Testing framework is planned but not yet implemented. The application uses manua
 ```bash
 python build.py    # Creates single-file executable with UAC elevation
 ```
-
-**Build Features**
-- PyInstaller single-file executable with `--onefile`
-- Built-in UAC elevation using `--uac-admin`
-- SVG and asset bundling
-- Windows GUI application (`--windowed`)
-- All dependencies included in single executable
-
 ## Configuration
 
 Settings are stored in JSON format at:
@@ -120,28 +112,6 @@ The application includes a first-time setup wizard that:
 3. Tests setupc.exe functionality
 4. Configures initial settings
 
-## Development
-
-**Code Standards**
-- PyQt6 framework with type hints throughout
-- Qt signal-slot architecture for component communication
-- Model-View-Controller pattern for separation
-- QThread workers for non-blocking operations
-- Comprehensive error handling
-
-**Adding Features**
-1. Define command template in constants
-2. Implement in CommandManager with validation
-3. Add UI action in RibbonToolbar
-4. Wire signal-slot connections
-5. Test manually with setupc.exe integration
-
-**GUI Guidelines**
-- Follow Windows design patterns
-- Use QThread for blocking operations
-- Provide real-time user feedback
-- Support high DPI displays
-- 
 **Logs**
 Error logs stored at: `%LOCALAPPDATA%\com0com-gui\logs\error.log`
 
