@@ -6,7 +6,6 @@ from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QFormLayout,
                             QPushButton, QGroupBox, QMessageBox, QFrame,
                             QDialogButtonBox, QDoubleSpinBox, QScrollArea)
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont
 
 from ...core.models import Port, PortPair
 from ...core.validators import ParameterValidator
@@ -37,16 +36,11 @@ class ConfigurePortDialog(QDialog):
         
         # Title
         title_label = QLabel(f"Configure {self.port.identifier}")
-        title_font = QFont()
-        title_font.setPointSize(12)
-        title_font.setBold(True)
-        title_label.setFont(title_font)
         layout.addWidget(title_label)
         
         # Description
         desc_label = QLabel(f"Modify the configuration parameters for virtual port {self.port.identifier}.")
         desc_label.setWordWrap(True)
-        desc_label.setStyleSheet("color: gray; margin-bottom: 10px;")
         layout.addWidget(desc_label)
         
         # Create scroll area for all configuration content

@@ -6,7 +6,6 @@ from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QFormLayout,
                             QPushButton, QGroupBox, QMessageBox, QFrame,
                             QDialogButtonBox, QTabWidget, QWidget)
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont
 
 from ...core.validators import ParameterValidator
 from ...utils.constants import BOOLEAN_VALUES, PIN_ASSIGNMENT_VALUES
@@ -33,17 +32,12 @@ class NewPortDialog(QDialog):
         
         # Title
         title_label = QLabel("Create New Virtual Port Pair")
-        title_font = QFont()
-        title_font.setPointSize(12)
-        title_font.setBold(True)
-        title_label.setFont(title_font)
         layout.addWidget(title_label)
         
         # Description
         desc_label = QLabel("Configure the settings for your new virtual port pair. "
                            "Each pair consists of two connected virtual COM ports (A and B).")
         desc_label.setWordWrap(True)
-        desc_label.setStyleSheet("color: gray; margin-bottom: 10px;")
         layout.addWidget(desc_label)
         
         # Pair settings group

@@ -102,7 +102,6 @@ class CommandResult:
 class DriverInfo:
     """com0com driver information."""
     status: DriverStatus
-    version: str = ""
     install_path: str = ""
     error_message: str = ""
     

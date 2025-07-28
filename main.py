@@ -16,11 +16,18 @@ from src.utils.constants import APP_NAME, APP_VERSION
 
 def main():
     """Initialize and run the com0com GUI application."""
+    # Disable dark mode detection
+    os.environ['QT_QPA_PLATFORMTHEME'] = ''
+    
     # Create QApplication
     app = QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
     app.setApplicationVersion(APP_VERSION)
     app.setOrganizationName("com0com GUI")
+    
+    # Set native Windows style for best fusiontegration
+    app.setStyle('fusion')
+    
     
     # Set Windows-specific attributes for better integration
     if sys.platform == "win32":

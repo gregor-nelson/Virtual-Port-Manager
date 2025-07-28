@@ -66,7 +66,6 @@ class PropertiesPanel(QScrollArea):
         welcome_label = QLabel("Select a port pair or individual port to view and edit its properties.")
         welcome_label.setWordWrap(True)
         welcome_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        welcome_label.setStyleSheet("color: gray; font-style: italic; padding: 20px;")
         
         self.content_layout.addWidget(welcome_label)
     

@@ -9,7 +9,7 @@ from PyQt6.QtCore import Qt, QTimer, pyqtSlot
 from PyQt6.QtGui import QAction, QIcon, QKeySequence, QKeyEvent
 
 from ..core.command_manager import CommandManager
-from ..core.models import PortPair, Port, CommandResult, DriverInfo
+from ..core.models import PortPair, Port, CommandResult, DriverInfo, DriverStatus
 from ..core.config_manager import ConfigManager
 from ..utils.constants import (WINDOW_TITLE, WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT,
                               WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT)
@@ -481,9 +481,10 @@ class MainWindow(QMainWindow):
     @pyqtSlot(DriverInfo)
     def on_driver_status_changed(self, driver_info: DriverInfo):
         """Handle driver status change."""
-        status_text = f"Driver: {driver_info.status.value}"
-        if driver_info.version:
-            status_text += f" ({driver_info.version})"
+        if driver_info.status == DriverStatus.INSTALLED:
+            status_text = "Driver: Installed"
+        else:
+            status_text = "Driver: Not Installed"
         self.driver_status_label.setText(status_text)
     
     @pyqtSlot(str)

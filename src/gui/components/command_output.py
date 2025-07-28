@@ -32,17 +32,6 @@ class CommandOutputPanel(QWidget):
         
         self.toggle_button = QPushButton("▲ Command Output")
         self.toggle_button.setFlat(True)
-        self.toggle_button.setStyleSheet("""
-            QPushButton {
-                text-align: left;
-                font-weight: bold;
-                border: none;
-                padding: 2px 5px;
-            }
-            QPushButton:hover {
-                background-color: #e1e1e1;
-            }
-        """)
         
         clear_button = QPushButton("Clear")
         clear_button.setMaximumWidth(60)
@@ -64,10 +53,19 @@ class CommandOutputPanel(QWidget):
         self.output_text.setMaximumHeight(200)
         self.output_text.setMinimumHeight(100)
         
-        # Use monospace font for command output
-        font = QFont("Courier New", 9)
-        font.setStyleHint(QFont.StyleHint.TypeWriter)
-        self.output_text.setFont(font)
+        # Set monospace font for proper console output formatting
+        # Try modern fonts first, fallback to system defaults
+        font_families = ["Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Consolas", "Courier New"]
+        console_font = QFont()
+        console_font.setStyleHint(QFont.StyleHint.Monospace)
+        console_font.setPointSize(9)
+        
+        for family in font_families:
+            console_font.setFamily(family)
+            if console_font.exactMatch():
+                break
+        
+        self.output_text.setFont(console_font)
         
         content_layout.addWidget(self.output_text)
         layout.addWidget(self.content_widget)
@@ -125,20 +123,22 @@ class CommandOutputPanel(QWidget):
         # Format and add output
         if result.output.strip():
             format_normal = QTextCharFormat()
-            format_normal.setForeground(QColor("#000000"))
+            format_normal.setForeground(self.palette().color(self.palette().ColorRole.Text))
             cursor.setCharFormat(format_normal)
-            cursor.insertText(f"Output: {result.output}\n")
+            cursor.insertText("Output:\n")
+            cursor.insertText(f"{result.output.strip()}\n")
         
         # Format and add error (if any)
         if result.error.strip():
             format_error = QTextCharFormat()
             format_error.setForeground(QColor("#cc0000"))
             cursor.setCharFormat(format_error)
-            cursor.insertText(f"Error: {result.error}\n")
+            cursor.insertText("Error:\n")
+            cursor.insertText(f"{result.error.strip()}\n")
         
         # Add execution time and result
         format_info = QTextCharFormat()
-        format_info.setForeground(QColor("#666666"))
+        format_info.setForeground(self.palette().color(self.palette().ColorRole.PlaceholderText))
         cursor.setCharFormat(format_info)
         
         status = "SUCCESS" if result.success else "FAILED"
@@ -165,7 +165,7 @@ class CommandOutputPanel(QWidget):
         elif level == "WARNING":
             format_text.setForeground(QColor("#ff8800"))
         else:
-            format_text.setForeground(QColor("#0066cc"))
+            format_text.setForeground(self.palette().color(self.palette().ColorRole.Link))
         
         cursor.setCharFormat(format_text)
         cursor.insertText(f"[{timestamp}] {level}: {message}\n")

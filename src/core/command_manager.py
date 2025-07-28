@@ -244,7 +244,6 @@ class CommandManager(QObject):
                 # If list command works, driver is installed
                 driver_info = DriverInfo(
                     status=DriverStatus.INSTALLED,
-                    version="Unknown",  # setupc doesn't provide version info
                     install_path=self.setupc_path
                 )
             else:

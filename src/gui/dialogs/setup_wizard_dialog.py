@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel,
                             QProgressBar, QCheckBox, QLineEdit, QFileDialog,
                             QMessageBox, QFrame, QScrollArea)
 from PyQt6.QtCore import Qt, pyqtSignal, QThread, QTimer
-from PyQt6.QtGui import QFont, QPixmap, QIcon
+from PyQt6.QtGui import QPixmap, QIcon
 
 from ...core.models import DriverInfo
 from ...utils.constants import SETUPC_PATHS, APP_NAME
@@ -108,16 +108,10 @@ class WizardPage(QWidget):
         
         # Title
         title_label = QLabel(self.title)
-        title_font = QFont()
-        title_font.setPointSize(16)
-        title_font.setBold(True)
-        title_label.setFont(title_font)
-        title_label.setStyleSheet("color: #0078D4; margin-bottom: 10px;")
         
         # Description
         desc_label = QLabel(self.description)
         desc_label.setWordWrap(True)
-        desc_label.setStyleSheet("color: #333; margin-bottom: 20px;")
         
         layout.addWidget(title_label)
         layout.addWidget(desc_label)
@@ -205,7 +199,6 @@ class DriverDetectionPage(WizardPage):
         
         # Status label
         self.status_label = QLabel("Click 'Start Detection' to begin...")
-        self.status_label.setStyleSheet("color: #666;")
         
         # Start button
         self.start_button = QPushButton("Start Detection")
@@ -247,10 +240,8 @@ class DriverDetectionPage(WizardPage):
         
         if success:
             self.status_label.setText("✅ " + message)
-            self.status_label.setStyleSheet("color: #0D7377;")
         else:
             self.status_label.setText("❌ " + message)
-            self.status_label.setStyleSheet("color: #D73027;")
             
             # Show troubleshooting info
             self.results_area.setVisible(True)
@@ -403,10 +394,8 @@ class SetupcDetectionPage(WizardPage):
         
         if success:
             self.test_status.setText("✅ " + message)
-            self.test_status.setStyleSheet("color: #0D7377;")
         else:
             self.test_status.setText("❌ " + message)
-            self.test_status.setStyleSheet("color: #D73027;")
         
         self.test_button.setText("Re-test")
         self.test_button.setEnabled(True)
@@ -452,7 +441,6 @@ class CompletionPage(WizardPage):
         
         # Success message
         success_label = QLabel("✅ Setup completed successfully!")
-        success_label.setStyleSheet("color: #0D7377; font-size: 14px; font-weight: bold;")
         layout.addWidget(success_label)
         
         # Summary
@@ -566,14 +554,6 @@ class SetupWizardDialog(QDialog):
         """Create wizard header."""
         header = QFrame()
         header.setFrameStyle(QFrame.Shape.Box)
-        header.setStyleSheet("""
-            QFrame {
-                background-color: #f8f9fa;
-                border: 1px solid #dee2e6;
-                border-radius: 0px;
-                padding: 10px;
-            }
-        """)
         
         layout = QHBoxLayout(header)
         
@@ -587,13 +567,8 @@ class SetupWizardDialog(QDialog):
         text_layout = QVBoxLayout()
         
         title_label = QLabel(f"{APP_NAME} Setup Wizard")
-        title_font = QFont()
-        title_font.setPointSize(14)
-        title_font.setBold(True)
-        title_label.setFont(title_font)
         
         desc_label = QLabel("Configure your virtual serial port manager")
-        desc_label.setStyleSheet("color: #666;")
         
         text_layout.addWidget(title_label)
         text_layout.addWidget(desc_label)

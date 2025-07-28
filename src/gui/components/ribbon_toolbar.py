@@ -3,31 +3,33 @@
 import os
 from typing import Optional
 from PyQt6.QtWidgets import (QToolBar, QWidget, QHBoxLayout, QVBoxLayout, 
-                            QLabel, QPushButton, QFrame, QSizePolicy,
-                            QButtonGroup)
+                            QLabel, QPushButton, QFrame)
 from PyQt6.QtCore import Qt, pyqtSignal, QSize
-from PyQt6.QtGui import QIcon, QFont, QAction, QPixmap
-from PyQt6.QtSvgWidgets import QSvgWidget
-from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtGui import QIcon
 
 from ...core.models import PortPair, Port
 
 
 class RibbonButton(QPushButton):
-    """Large ribbon-style button."""
+    """Windows 10-style ribbon button."""
     
     def __init__(self, text: str, icon_name: str = None, parent=None):
         super().__init__(parent)
         self.setText(text)
-        self.setMinimumSize(80, 60)
-        self.setMaximumSize(100, 80)
+        
+        # Windows 10-like button sizing and styling
+        self.setStyleSheet("QPushButton { padding: 4px 8px; }")
         
         # Set icon if provided
         if icon_name:
-            self._load_svg_icon(icon_name)
+            icon = self._load_svg_icon(icon_name)
+            if not icon.isNull():
+                self.setIcon(icon)
+                self.setIconSize(QSize(16, 16))  # Standard Windows icon size
+        
     
     def _load_svg_icon(self, icon_name: str):
-        """Load SVG icon and set it as button icon."""
+        """Load SVG icon and return QIcon."""
         # Get the project root directory
         current_dir = os.path.dirname(os.path.abspath(__file__))
         project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
@@ -35,14 +37,10 @@ class RibbonButton(QPushButton):
         
         if os.path.exists(icon_path):
             # Create QIcon from SVG
-            icon = QIcon(icon_path)
-            self.setIcon(icon)
-            self.setIconSize(QSize(24, 24))
+            return QIcon(icon_path)
         else:
-            # Fallback: create a simple colored square if SVG not found
-            pixmap = QPixmap(24, 24)
-            pixmap.fill(Qt.GlobalColor.blue)
-            self.setIcon(QIcon(pixmap))
+            # Return null icon if SVG not found
+            return QIcon()
 
 
 class RibbonGroup(QFrame):
@@ -50,8 +48,7 @@ class RibbonGroup(QFrame):
     
     def __init__(self, title: str, parent=None):
         super().__init__(parent)
-        self.setFrameStyle(QFrame.Shape.Panel)
-        self.setStyleSheet("QFrame { border: 1px solid #d9d9d9; }")
+        self.setFrameStyle(QFrame.Shape.NoFrame)
         self.setup_ui(title)
     
     def setup_ui(self, title: str):
@@ -63,27 +60,17 @@ class RibbonGroup(QFrame):
         # Buttons area
         self.buttons_widget = QWidget()
         self.buttons_layout = QHBoxLayout(self.buttons_widget)
-        self.buttons_layout.setSpacing(2)
+        self.buttons_layout.setSpacing(4)  # Windows 10-like spacing
         self.buttons_layout.setContentsMargins(0, 0, 0, 0)
         
         layout.addWidget(self.buttons_widget)
-        
-        # Group title
-        title_label = QLabel(title)
-        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title_font = QFont()
-        title_font.setPointSize(8)
-        title_label.setFont(title_font)
-        title_label.setStyleSheet("color: gray; border: none;")
-        
-        layout.addWidget(title_label)
     
     def add_button(self, button: RibbonButton):
         """Add a button to the group."""
         self.buttons_layout.addWidget(button)
     
     def add_separator(self):
-        """Add a vertical separator."""
+        """Add a Windows 10-style vertical separator."""
         separator = QFrame()
         separator.setFrameShape(QFrame.Shape.VLine)
         separator.setFrameShadow(QFrame.Shadow.Sunken)
@@ -117,9 +104,9 @@ class RibbonToolbar(QToolBar):
         """Set up the ribbon toolbar UI."""
         self.setMovable(False)
         self.setFloatable(False)
-        self.setMinimumHeight(90)
-        self.setMaximumHeight(90)
-        
+        self.setMinimumHeight(48)
+        self.setMaximumHeight(48)
+                
         # Main widget to hold ribbon groups
         main_widget = QWidget()
         main_layout = QHBoxLayout(main_widget)

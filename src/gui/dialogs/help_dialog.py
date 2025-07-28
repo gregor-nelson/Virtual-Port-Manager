@@ -2,11 +2,9 @@
 
 from typing import Dict, Any
 from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QTreeWidget, 
-                            QTreeWidgetItem, QTextBrowser, QLineEdit, QPushButton,
-                            QSplitter, QLabel, QMessageBox, QWidget, QTreeWidgetItemIterator)
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont, QClipboard, QIcon
-import re
+                            QTreeWidgetItem, QTextBrowser, QPushButton,
+                            QSplitter, QMessageBox, QWidget)
+from PyQt6.QtCore import Qt
 
 
 class HelpDialog(QDialog):
@@ -14,21 +12,14 @@ class HelpDialog(QDialog):
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("com0com Help - Command and Parameter Reference")
-        self.setModal(False)  # Allow interaction with main window
-        self.resize(1000, 750)
+        self.setWindowTitle("com0com Help")
+        self.setModal(False)
+        self.resize(650, 500)
+        self.setMinimumSize(600, 450)
         
-        # Apply dialog-wide styling to match Windows theme
-        self.setStyleSheet("""
-            QDialog {
-                background-color: #f0f0f0;
-                color: #333333;
-            }
-        """)
         
         # Help content data
         self.help_content = self._load_help_content()
-        self.current_snippet = ""
         
         self.setup_ui()
         self.setup_connections()
@@ -43,99 +34,15 @@ class HelpDialog(QDialog):
         layout.setSpacing(12)
         layout.setContentsMargins(12, 12, 12, 12)
         
-        # Search box with Windows theme styling - compact layout
-        search_widget = QWidget()
-        search_widget.setFixedHeight(36)  # Fixed height to prevent expansion
-        search_widget.setStyleSheet("""
-            QWidget {
-                background-color: #ffffff;
-                border: 1px solid #d9d9d9;
-                border-radius: 0px;
-                padding: 6px 8px;
-            }
-        """)
-        search_layout = QHBoxLayout(search_widget)
-        search_layout.setContentsMargins(0, 0, 0, 0)
-        search_layout.setSpacing(8)
-        
-        search_label = QLabel("Search:")
-        search_label.setFixedWidth(50)  # Fixed width for the label
-        search_label.setStyleSheet("""
-            QLabel {
-                border: none;
-                background: transparent;
-                font-size: 11px;
-                font-weight: bold;
-                color: #333333;
-                padding: 0px;
-            }
-        """)
-        
-        self.search_edit = QLineEdit()
-        self.search_edit.setFixedHeight(22)  # Fixed height for the input
-        self.search_edit.setPlaceholderText("Enter search term...")
-        self.search_edit.setStyleSheet("""
-            QLineEdit {
-                background-color: #ffffff;
-                border: 1px solid #d9d9d9;
-                border-radius: 0px;
-                padding: 2px 6px;
-                font-size: 11px;
-            }
-            QLineEdit:focus {
-                border-color: #0078d4;
-                outline: none;
-            }
-        """)
-        
-        search_layout.addWidget(search_label)
-        search_layout.addWidget(self.search_edit, 1)
-        layout.addWidget(search_widget)
         
         # Main content area with splitter
         splitter = QSplitter(Qt.Orientation.Horizontal)
         
-        # Tree widget for navigation with Windows theme styling
+        # Tree widget for navigation
         self.tree_widget = QTreeWidget()
         self.tree_widget.setHeaderLabel("Topics")
-        self.tree_widget.setMaximumWidth(300)
-        self.tree_widget.setMinimumWidth(220)
-        self.tree_widget.setStyleSheet("""
-            QTreeWidget {
-                background-color: #ffffff;
-                border: 1px solid #d9d9d9;
-                border-radius: 0px;
-                selection-background-color: #e1f0ff;
-                outline: none;
-                font-size: 11px;
-                font-family: 'Segoe UI', Arial, sans-serif;
-            }
-            QTreeWidget::item {
-                border: none;
-                padding: 4px;
-                height: 24px;
-            }
-            QTreeWidget::item:selected {
-                background-color: #e1f0ff;
-                color: #333333;
-            }
-            QTreeWidget::item:hover {
-                background-color: #f0f8ff;
-            }
-            QTreeWidget::branch {
-                background-color: transparent;
-            }
-            QHeaderView::section {
-                background-color: #f8f8f8;
-                border: none;
-                border-right: 1px solid #d9d9d9;
-                border-bottom: 1px solid #d9d9d9;
-                padding: 6px 8px;
-                font-weight: bold;
-                font-size: 11px;
-                color: #333333;
-            }
-        """)
+        self.tree_widget.setMaximumWidth(200)
+        self.tree_widget.setMinimumWidth(150)
         splitter.addWidget(self.tree_widget)
         
         # Content area with proper widget hierarchy
@@ -144,134 +51,30 @@ class HelpDialog(QDialog):
         content_layout.setContentsMargins(0, 0, 0, 0)
         content_layout.setSpacing(8)
         
-        # Content browser with enhanced styling
+        # Content browser
         self.content_browser = QTextBrowser()
-        self.content_browser.setFont(QFont("Segoe UI", 11))
-        self.content_browser.setStyleSheet("""
-            QTextBrowser {
-                background-color: #ffffff;
-                color: #333333;
-                font-family: 'Segoe UI', Arial, sans-serif;
-                font-size: 11pt;
-                line-height: 1.5;
-                padding: 20px;
-                border: 1px solid #d9d9d9;
-                border-radius: 0px;
-                selection-background-color: #e1f0ff;
-            }
-            QTextBrowser:focus {
-                border-color: #0078d4;
-                outline: none;
-            }
-            QScrollBar:vertical {
-                background-color: #f0f0f0;
-                width: 16px;
-                border-radius: 0px;
-            }
-            QScrollBar::handle:vertical {
-                background-color: #c1c1c1;
-                border-radius: 0px;
-                min-height: 20px;
-                margin: 2px;
-            }
-            QScrollBar::handle:vertical:hover {
-                background-color: #a8a8a8;
-            }
-            QScrollBar::add-line:vertical,
-            QScrollBar::sub-line:vertical {
-                border: none;
-                background: none;
-            }
-        """)
         content_layout.addWidget(self.content_browser)
         
-        # Button bar with Windows theme styling
+        # Button bar
         button_widget = QWidget()
-        button_widget.setStyleSheet("""
-            QWidget {
-                background-color: #f8f8f8;
-                border-top: 1px solid #d9d9d9;
-                padding: 8px;
-            }
-        """)
         button_layout = QHBoxLayout(button_widget)
         button_layout.setContentsMargins(0, 0, 0, 0)
         
-        self.copy_button = QPushButton("Copy Command")
-        self.copy_button.setEnabled(False)
-        self.copy_button.setStyleSheet("""
-            QPushButton {
-                background-color: #ffffff;
-                border: 1px solid #d9d9d9;
-                border-radius: 0px;
-                padding: 6px 16px;
-                font-size: 11px;
-                min-width: 100px;
-                min-height: 20px;
-            }
-            QPushButton:hover:enabled {
-                background-color: #e8f4fd;
-                border-color: #0078d4;
-            }
-            QPushButton:pressed:enabled {
-                background-color: #d1e7f7;
-                border-color: #106ebe;
-            }
-            QPushButton:disabled {
-                background-color: #f0f0f0;
-                border-color: #e1e1e1;
-                color: #a0a0a0;
-            }
-        """)
-        
-        button_layout.addWidget(self.copy_button)
-        button_layout.addStretch()
-        
         close_button = QPushButton("Close")
         close_button.clicked.connect(self.close)
-        close_button.setStyleSheet("""
-            QPushButton {
-                background-color: #ffffff;
-                border: 1px solid #d9d9d9;
-                border-radius: 0px;
-                padding: 6px 16px;
-                font-size: 11px;
-                min-width: 80px;
-                min-height: 20px;
-            }
-            QPushButton:hover {
-                background-color: #e8f4fd;
-                border-color: #0078d4;
-            }
-            QPushButton:pressed {
-                background-color: #d1e7f7;
-                border-color: #106ebe;
-            }
-        """)
+        button_layout.addStretch()
         button_layout.addWidget(close_button)
         
         content_layout.addWidget(button_widget)
         splitter.addWidget(content_container)
         
-        # Apply splitter styling and set proportions
-        splitter.setStyleSheet("""
-            QSplitter::handle {
-                background-color: #d9d9d9;
-                width: 3px;
-                height: 3px;
-            }
-            QSplitter::handle:hover {
-                background-color: #0078d4;
-            }
-        """)
-        splitter.setSizes([280, 720])
+        # Apply splitter proportions
+        splitter.setSizes([180, 470])
         layout.addWidget(splitter)
     
     def setup_connections(self):
         """Set up signal connections."""
         self.tree_widget.currentItemChanged.connect(self._on_tree_selection_changed)
-        self.search_edit.textChanged.connect(self._on_search_text_changed)
-        self.copy_button.clicked.connect(self._copy_command_snippet)
     
     def populate_tree(self):
         """Populate the tree widget with help topics."""
@@ -318,97 +121,9 @@ class HelpDialog(QDialog):
             # Display content
             self.content_browser.setHtml(content_data['content'])
             
-            # Update copy button
-            self.current_snippet = content_data.get('snippet', '')
-            self.copy_button.setEnabled(bool(self.current_snippet))
-            
         except KeyError:
             self.content_browser.setHtml("<h3>Content not found</h3><p>The requested help content could not be loaded.</p>")
-            self.copy_button.setEnabled(False)
     
-    def _on_search_text_changed(self, text: str):
-        """Handle search text changes."""
-        if not text.strip():
-            # Show all items when search is cleared
-            self._show_all_tree_items()
-            return
-        
-        # Hide items that don't match search
-        self._filter_tree_items(text.lower())
-    
-    def _show_all_tree_items(self):
-        """Show all tree items."""
-        iterator = QTreeWidgetItemIterator(self.tree_widget)
-        while iterator.value():
-            iterator.value().setHidden(False)
-            iterator += 1
-    
-    def _filter_tree_items(self, search_text: str):
-        """Filter tree items based on search text."""
-        iterator = QTreeWidgetItemIterator(self.tree_widget)
-        while iterator.value():
-            item = iterator.value()
-            text = item.text(0).lower()
-            
-            # Check if item or any parent/child matches
-            matches = search_text in text
-            if not matches:
-                # Check content for matches
-                section_key, sub_key = item.data(0, Qt.ItemDataRole.UserRole)
-                try:
-                    if section_key == 'overview':
-                        content = self.help_content['overview']['content']
-                    elif sub_key:
-                        content = self.help_content[section_key]['subsections'][sub_key]['content']
-                    else:
-                        content = self.help_content[section_key]['content']
-                    
-                    # Remove HTML tags for search
-                    clean_content = re.sub(r'<[^>]+>', '', content).lower()
-                    matches = search_text in clean_content
-                except KeyError:
-                    pass
-            
-            item.setHidden(not matches)
-            iterator += 1
-    
-    def _copy_command_snippet(self):
-        """Copy the current command snippet to clipboard."""
-        if self.current_snippet:
-            clipboard = QApplication.clipboard()
-            clipboard.setText(self.current_snippet)
-            
-            # Show feedback with Windows theme styling
-            msg_box = QMessageBox(self)
-            msg_box.setIcon(QMessageBox.Icon.Information)
-            msg_box.setWindowTitle("Command Copied")
-            msg_box.setText("Command copied to clipboard:")
-            msg_box.setInformativeText(self.current_snippet)
-            msg_box.setStyleSheet("""
-                QMessageBox {
-                    background-color: #ffffff;
-                    color: #333333;
-                    font-family: 'Segoe UI', Arial, sans-serif;
-                    font-size: 11px;
-                }
-                QMessageBox QPushButton {
-                    background-color: #ffffff;
-                    border: 1px solid #d9d9d9;
-                    border-radius: 0px;
-                    padding: 6px 16px;
-                    font-size: 11px;
-                    min-width: 80px;
-                }
-                QMessageBox QPushButton:hover {
-                    background-color: #e8f4fd;
-                    border-color: #0078d4;
-                }
-                QMessageBox QPushButton:pressed {
-                    background-color: #d1e7f7;
-                    border-color: #106ebe;
-                }
-            """)
-            msg_box.exec()
     
     def _load_help_content(self) -> Dict[str, Any]:
         """Load comprehensive help content with technical accuracy."""
@@ -416,57 +131,6 @@ class HelpDialog(QDialog):
             'overview': {
                 'title': 'Overview',
                 'content': '''
-                <style>
-                body { 
-                    font-family: 'Segoe UI', Arial, sans-serif; 
-                    color: #333333; 
-                    line-height: 1.6;
-                    margin: 0;
-                }
-                h1, h2 { 
-                    color: #0078d4; 
-                    font-weight: 600;
-                    margin-top: 24px;
-                    margin-bottom: 12px;
-                }
-                h3, h4 { 
-                    color: #333333; 
-                    font-weight: 600;
-                    margin-top: 20px;
-                    margin-bottom: 8px;
-                }
-                h5 { 
-                    color: #555555; 
-                    font-weight: 600;
-                    margin-top: 16px;
-                    margin-bottom: 6px;
-                }
-                p { 
-                    margin-bottom: 12px;
-                    color: #333333;
-                }
-                ul, ol { 
-                    margin-bottom: 12px;
-                    padding-left: 20px;
-                }
-                li { 
-                    margin-bottom: 4px;
-                    color: #333333;
-                }
-                strong { 
-                    color: #0078d4;
-                    font-weight: 600;
-                }
-                code { 
-                    background-color: #f8f8f8;
-                    border: 1px solid #e1e1e1;
-                    border-radius: 0px;
-                    padding: 2px 4px;
-                    font-family: 'Consolas', 'Courier New', monospace;
-                    font-size: 10pt;
-                    color: #d13438;
-                }
-                </style>
                 <h2>com0com Virtual Serial Port Manager</h2>
                 <p>This application provides a graphical interface for managing com0com virtual serial port pairs. 
                 com0com creates pairs of interconnected virtual COM ports that behave like physical serial ports 
@@ -481,64 +145,13 @@ class HelpDialog(QDialog):
                 </ul>
                 
                 <h3>Navigation</h3>
-                <p>Use the tree on the left to browse help topics. The search box above filters content across all sections.</p>
+                <p>Use the tree on the left to browse help topics.</p>
                 '''
             },
             
             'commands': {
                 'title': 'Commands Reference',
                 'content': '''
-                <style>
-                body { 
-                    font-family: 'Segoe UI', Arial, sans-serif; 
-                    color: #333333; 
-                    line-height: 1.6;
-                    margin: 0;
-                }
-                h1, h2 { 
-                    color: #0078d4; 
-                    font-weight: 600;
-                    margin-top: 24px;
-                    margin-bottom: 12px;
-                }
-                h3, h4 { 
-                    color: #333333; 
-                    font-weight: 600;
-                    margin-top: 20px;
-                    margin-bottom: 8px;
-                }
-                h5 { 
-                    color: #555555; 
-                    font-weight: 600;
-                    margin-top: 16px;
-                    margin-bottom: 6px;
-                }
-                p { 
-                    margin-bottom: 12px;
-                    color: #333333;
-                }
-                ul, ol { 
-                    margin-bottom: 12px;
-                    padding-left: 20px;
-                }
-                li { 
-                    margin-bottom: 4px;
-                    color: #333333;
-                }
-                strong { 
-                    color: #0078d4;
-                    font-weight: 600;
-                }
-                code { 
-                    background-color: #f8f8f8;
-                    border: 1px solid #e1e1e1;
-                    border-radius: 0px;
-                    padding: 2px 4px;
-                    font-family: 'Consolas', 'Courier New', monospace;
-                    font-size: 10pt;
-                    color: #d13438;
-                }
-                </style>
                 <h2>setupc.exe Commands</h2>
                 <p>All operations in this GUI execute setupc.exe commands. Understanding these commands helps 
                 troubleshoot issues and use advanced features.</p>
@@ -547,57 +160,6 @@ class HelpDialog(QDialog):
                     'port_management': {
                         'title': 'Port Management',
                         'content': '''
-                        <style>
-                        body { 
-                            font-family: 'Segoe UI', Arial, sans-serif; 
-                            color: #333333; 
-                            line-height: 1.6;
-                            margin: 0;
-                        }
-                        h1, h2 { 
-                            color: #0078d4; 
-                            font-weight: 600;
-                            margin-top: 24px;
-                            margin-bottom: 12px;
-                        }
-                        h3, h4 { 
-                            color: #333333; 
-                            font-weight: 600;
-                            margin-top: 20px;
-                            margin-bottom: 8px;
-                        }
-                        h5 { 
-                            color: #555555; 
-                            font-weight: 600;
-                            margin-top: 16px;
-                            margin-bottom: 6px;
-                        }
-                        p { 
-                            margin-bottom: 12px;
-                            color: #333333;
-                        }
-                        ul, ol { 
-                            margin-bottom: 12px;
-                            padding-left: 20px;
-                        }
-                        li { 
-                            margin-bottom: 4px;
-                            color: #333333;
-                        }
-                        strong { 
-                            color: #0078d4;
-                            font-weight: 600;
-                        }
-                        code { 
-                            background-color: #f8f8f8;
-                            border: 1px solid #e1e1e1;
-                            border-radius: 0px;
-                            padding: 2px 4px;
-                            font-family: 'Consolas', 'Courier New', monospace;
-                            font-size: 10pt;
-                            color: #d13438;
-                        }
-                        </style>
                         <h3>Port Management Commands</h3>
                         
                         <h4>Install Port Pair</h4>
@@ -629,57 +191,6 @@ class HelpDialog(QDialog):
                     'driver_operations': {
                         'title': 'Driver Operations',
                         'content': '''
-                        <style>
-                        body { 
-                            font-family: 'Segoe UI', Arial, sans-serif; 
-                            color: #333333; 
-                            line-height: 1.6;
-                            margin: 0;
-                        }
-                        h1, h2 { 
-                            color: #0078d4; 
-                            font-weight: 600;
-                            margin-top: 24px;
-                            margin-bottom: 12px;
-                        }
-                        h3, h4 { 
-                            color: #333333; 
-                            font-weight: 600;
-                            margin-top: 20px;
-                            margin-bottom: 8px;
-                        }
-                        h5 { 
-                            color: #555555; 
-                            font-weight: 600;
-                            margin-top: 16px;
-                            margin-bottom: 6px;
-                        }
-                        p { 
-                            margin-bottom: 12px;
-                            color: #333333;
-                        }
-                        ul, ol { 
-                            margin-bottom: 12px;
-                            padding-left: 20px;
-                        }
-                        li { 
-                            margin-bottom: 4px;
-                            color: #333333;
-                        }
-                        strong { 
-                            color: #0078d4;
-                            font-weight: 600;
-                        }
-                        code { 
-                            background-color: #f8f8f8;
-                            border: 1px solid #e1e1e1;
-                            border-radius: 0px;
-                            padding: 2px 4px;
-                            font-family: 'Consolas', 'Courier New', monospace;
-                            font-size: 10pt;
-                            color: #d13438;
-                        }
-                        </style>
                         <h3>Driver Management Commands</h3>
                         
                         <h4>Preinstall Driver</h4>
@@ -708,57 +219,6 @@ class HelpDialog(QDialog):
                     'utilities': {
                         'title': 'Utility Commands',
                         'content': '''
-                        <style>
-                        body { 
-                            font-family: 'Segoe UI', Arial, sans-serif; 
-                            color: #333333; 
-                            line-height: 1.6;
-                            margin: 0;
-                        }
-                        h1, h2 { 
-                            color: #0078d4; 
-                            font-weight: 600;
-                            margin-top: 24px;
-                            margin-bottom: 12px;
-                        }
-                        h3, h4 { 
-                            color: #333333; 
-                            font-weight: 600;
-                            margin-top: 20px;
-                            margin-bottom: 8px;
-                        }
-                        h5 { 
-                            color: #555555; 
-                            font-weight: 600;
-                            margin-top: 16px;
-                            margin-bottom: 6px;
-                        }
-                        p { 
-                            margin-bottom: 12px;
-                            color: #333333;
-                        }
-                        ul, ol { 
-                            margin-bottom: 12px;
-                            padding-left: 20px;
-                        }
-                        li { 
-                            margin-bottom: 4px;
-                            color: #333333;
-                        }
-                        strong { 
-                            color: #0078d4;
-                            font-weight: 600;
-                        }
-                        code { 
-                            background-color: #f8f8f8;
-                            border: 1px solid #e1e1e1;
-                            border-radius: 0px;
-                            padding: 2px 4px;
-                            font-family: 'Consolas', 'Courier New', monospace;
-                            font-size: 10pt;
-                            color: #d13438;
-                        }
-                        </style>
                         <h3>System Utilities</h3>
                         
                         <h4>Enable/Disable All Ports</h4>
@@ -789,57 +249,6 @@ class HelpDialog(QDialog):
             'parameters': {
                 'title': 'Parameters Reference',
                 'content': '''
-                <style>
-                body { 
-                    font-family: 'Segoe UI', Arial, sans-serif; 
-                    color: #333333; 
-                    line-height: 1.6;
-                    margin: 0;
-                }
-                h1, h2 { 
-                    color: #0078d4; 
-                    font-weight: 600;
-                    margin-top: 24px;
-                    margin-bottom: 12px;
-                }
-                h3, h4 { 
-                    color: #333333; 
-                    font-weight: 600;
-                    margin-top: 20px;
-                    margin-bottom: 8px;
-                }
-                h5 { 
-                    color: #555555; 
-                    font-weight: 600;
-                    margin-top: 16px;
-                    margin-bottom: 6px;
-                }
-                p { 
-                    margin-bottom: 12px;
-                    color: #333333;
-                }
-                ul, ol { 
-                    margin-bottom: 12px;
-                    padding-left: 20px;
-                }
-                li { 
-                    margin-bottom: 4px;
-                    color: #333333;
-                }
-                strong { 
-                    color: #0078d4;
-                    font-weight: 600;
-                }
-                code { 
-                    background-color: #f8f8f8;
-                    border: 1px solid #e1e1e1;
-                    border-radius: 0px;
-                    padding: 2px 4px;
-                    font-family: 'Consolas', 'Courier New', monospace;
-                    font-size: 10pt;
-                    color: #d13438;
-                }
-                </style>
                 <h2>Port Parameters</h2>
                 <p>Port parameters control the behaviour and characteristics of virtual serial ports. 
                 Understanding these parameters is essential for proper configuration.</p>
@@ -848,57 +257,6 @@ class HelpDialog(QDialog):
                     'basic_settings': {
                         'title': 'Basic Settings',
                         'content': '''
-                        <style>
-                        body { 
-                            font-family: 'Segoe UI', Arial, sans-serif; 
-                            color: #333333; 
-                            line-height: 1.6;
-                            margin: 0;
-                        }
-                        h1, h2 { 
-                            color: #0078d4; 
-                            font-weight: 600;
-                            margin-top: 24px;
-                            margin-bottom: 12px;
-                        }
-                        h3, h4 { 
-                            color: #333333; 
-                            font-weight: 600;
-                            margin-top: 20px;
-                            margin-bottom: 8px;
-                        }
-                        h5 { 
-                            color: #555555; 
-                            font-weight: 600;
-                            margin-top: 16px;
-                            margin-bottom: 6px;
-                        }
-                        p { 
-                            margin-bottom: 12px;
-                            color: #333333;
-                        }
-                        ul, ol { 
-                            margin-bottom: 12px;
-                            padding-left: 20px;
-                        }
-                        li { 
-                            margin-bottom: 4px;
-                            color: #333333;
-                        }
-                        strong { 
-                            color: #0078d4;
-                            font-weight: 600;
-                        }
-                        code { 
-                            background-color: #f8f8f8;
-                            border: 1px solid #e1e1e1;
-                            border-radius: 0px;
-                            padding: 2px 4px;
-                            font-family: 'Consolas', 'Courier New', monospace;
-                            font-size: 10pt;
-                            color: #d13438;
-                        }
-                        </style>
                         <h3>Basic Port Settings</h3>
                         
                         <h4>PortName</h4>
@@ -925,57 +283,6 @@ class HelpDialog(QDialog):
                     'emulation_features': {
                         'title': 'Emulation Features',
                         'content': '''
-                        <style>
-                        body { 
-                            font-family: 'Segoe UI', Arial, sans-serif; 
-                            color: #333333; 
-                            line-height: 1.6;
-                            margin: 0;
-                        }
-                        h1, h2 { 
-                            color: #0078d4; 
-                            font-weight: 600;
-                            margin-top: 24px;
-                            margin-bottom: 12px;
-                        }
-                        h3, h4 { 
-                            color: #333333; 
-                            font-weight: 600;
-                            margin-top: 20px;
-                            margin-bottom: 8px;
-                        }
-                        h5 { 
-                            color: #555555; 
-                            font-weight: 600;
-                            margin-top: 16px;
-                            margin-bottom: 6px;
-                        }
-                        p { 
-                            margin-bottom: 12px;
-                            color: #333333;
-                        }
-                        ul, ol { 
-                            margin-bottom: 12px;
-                            padding-left: 20px;
-                        }
-                        li { 
-                            margin-bottom: 4px;
-                            color: #333333;
-                        }
-                        strong { 
-                            color: #0078d4;
-                            font-weight: 600;
-                        }
-                        code { 
-                            background-color: #f8f8f8;
-                            border: 1px solid #e1e1e1;
-                            border-radius: 0px;
-                            padding: 2px 4px;
-                            font-family: 'Consolas', 'Courier New', monospace;
-                            font-size: 10pt;
-                            color: #d13438;
-                        }
-                        </style>
                         <h3>Hardware Emulation Parameters</h3>
                         
                         <h4>EmuBR (Baud Rate Emulation)</h4>
@@ -1006,57 +313,6 @@ class HelpDialog(QDialog):
                     'timing_control': {
                         'title': 'Timing Control',
                         'content': '''
-                        <style>
-                        body { 
-                            font-family: 'Segoe UI', Arial, sans-serif; 
-                            color: #333333; 
-                            line-height: 1.6;
-                            margin: 0;
-                        }
-                        h1, h2 { 
-                            color: #0078d4; 
-                            font-weight: 600;
-                            margin-top: 24px;
-                            margin-bottom: 12px;
-                        }
-                        h3, h4 { 
-                            color: #333333; 
-                            font-weight: 600;
-                            margin-top: 20px;
-                            margin-bottom: 8px;
-                        }
-                        h5 { 
-                            color: #555555; 
-                            font-weight: 600;
-                            margin-top: 16px;
-                            margin-bottom: 6px;
-                        }
-                        p { 
-                            margin-bottom: 12px;
-                            color: #333333;
-                        }
-                        ul, ol { 
-                            margin-bottom: 12px;
-                            padding-left: 20px;
-                        }
-                        li { 
-                            margin-bottom: 4px;
-                            color: #333333;
-                        }
-                        strong { 
-                            color: #0078d4;
-                            font-weight: 600;
-                        }
-                        code { 
-                            background-color: #f8f8f8;
-                            border: 1px solid #e1e1e1;
-                            border-radius: 0px;
-                            padding: 2px 4px;
-                            font-family: 'Consolas', 'Courier New', monospace;
-                            font-size: 10pt;
-                            color: #d13438;
-                        }
-                        </style>
                         <h3>Read Timeout Parameters</h3>
                         
                         <h4>AddRTTO (Additional Read Total Timeout)</h4>
@@ -1082,57 +338,6 @@ class HelpDialog(QDialog):
                     'port_modes': {
                         'title': 'Port Modes',
                         'content': '''
-                        <style>
-                        body { 
-                            font-family: 'Segoe UI', Arial, sans-serif; 
-                            color: #333333; 
-                            line-height: 1.6;
-                            margin: 0;
-                        }
-                        h1, h2 { 
-                            color: #0078d4; 
-                            font-weight: 600;
-                            margin-top: 24px;
-                            margin-bottom: 12px;
-                        }
-                        h3, h4 { 
-                            color: #333333; 
-                            font-weight: 600;
-                            margin-top: 20px;
-                            margin-bottom: 8px;
-                        }
-                        h5 { 
-                            color: #555555; 
-                            font-weight: 600;
-                            margin-top: 16px;
-                            margin-bottom: 6px;
-                        }
-                        p { 
-                            margin-bottom: 12px;
-                            color: #333333;
-                        }
-                        ul, ol { 
-                            margin-bottom: 12px;
-                            padding-left: 20px;
-                        }
-                        li { 
-                            margin-bottom: 4px;
-                            color: #333333;
-                        }
-                        strong { 
-                            color: #0078d4;
-                            font-weight: 600;
-                        }
-                        code { 
-                            background-color: #f8f8f8;
-                            border: 1px solid #e1e1e1;
-                            border-radius: 0px;
-                            padding: 2px 4px;
-                            font-family: 'Consolas', 'Courier New', monospace;
-                            font-size: 10pt;
-                            color: #d13438;
-                        }
-                        </style>
                         <h3>Port Visibility and Behaviour Modes</h3>
                         
                         <h4>PlugInMode</h4>
@@ -1170,57 +375,6 @@ class HelpDialog(QDialog):
                     'pin_wiring': {
                         'title': 'Pin Wiring',
                         'content': '''
-                        <style>
-                        body { 
-                            font-family: 'Segoe UI', Arial, sans-serif; 
-                            color: #333333; 
-                            line-height: 1.6;
-                            margin: 0;
-                        }
-                        h1, h2 { 
-                            color: #0078d4; 
-                            font-weight: 600;
-                            margin-top: 24px;
-                            margin-bottom: 12px;
-                        }
-                        h3, h4 { 
-                            color: #333333; 
-                            font-weight: 600;
-                            margin-top: 20px;
-                            margin-bottom: 8px;
-                        }
-                        h5 { 
-                            color: #555555; 
-                            font-weight: 600;
-                            margin-top: 16px;
-                            margin-bottom: 6px;
-                        }
-                        p { 
-                            margin-bottom: 12px;
-                            color: #333333;
-                        }
-                        ul, ol { 
-                            margin-bottom: 12px;
-                            padding-left: 20px;
-                        }
-                        li { 
-                            margin-bottom: 4px;
-                            color: #333333;
-                        }
-                        strong { 
-                            color: #0078d4;
-                            font-weight: 600;
-                        }
-                        code { 
-                            background-color: #f8f8f8;
-                            border: 1px solid #e1e1e1;
-                            border-radius: 0px;
-                            padding: 2px 4px;
-                            font-family: 'Consolas', 'Courier New', monospace;
-                            font-size: 10pt;
-                            color: #d13438;
-                        }
-                        </style>
                         <h3>Serial Control Signal Wiring</h3>
                         <p>Pin wiring parameters control how control signals (CTS, DSR, DCD, RI) are connected between port pairs. 
                         This emulates the behaviour of different cable configurations. All signals are logical states (high/low), 
@@ -1276,57 +430,6 @@ class HelpDialog(QDialog):
             'examples': {
                 'title': 'Configuration Examples',
                 'content': '''
-                <style>
-                body { 
-                    font-family: 'Segoe UI', Arial, sans-serif; 
-                    color: #333333; 
-                    line-height: 1.6;
-                    margin: 0;
-                }
-                h1, h2 { 
-                    color: #0078d4; 
-                    font-weight: 600;
-                    margin-top: 24px;
-                    margin-bottom: 12px;
-                }
-                h3, h4 { 
-                    color: #333333; 
-                    font-weight: 600;
-                    margin-top: 20px;
-                    margin-bottom: 8px;
-                }
-                h5 { 
-                    color: #555555; 
-                    font-weight: 600;
-                    margin-top: 16px;
-                    margin-bottom: 6px;
-                }
-                p { 
-                    margin-bottom: 12px;
-                    color: #333333;
-                }
-                ul, ol { 
-                    margin-bottom: 12px;
-                    padding-left: 20px;
-                }
-                li { 
-                    margin-bottom: 4px;
-                    color: #333333;
-                }
-                strong { 
-                    color: #0078d4;
-                    font-weight: 600;
-                }
-                code { 
-                    background-color: #f8f8f8;
-                    border: 1px solid #e1e1e1;
-                    border-radius: 0px;
-                    padding: 2px 4px;
-                    font-family: 'Consolas', 'Courier New', monospace;
-                    font-size: 10pt;
-                    color: #d13438;
-                }
-                </style>
                 <h2>Common Configuration Examples</h2>
                 <p>These examples demonstrate typical port configurations for different use cases.</p>
                 
@@ -1362,5 +465,3 @@ class HelpDialog(QDialog):
         return dialog
 
 
-# Import QApplication for clipboard access
-from PyQt6.QtWidgets import QApplication

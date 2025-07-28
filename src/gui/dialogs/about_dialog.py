@@ -3,7 +3,7 @@
 from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
                             QPushButton, QWidget, QFrame)
 from PyQt6.QtCore import Qt, QUrl
-from PyQt6.QtGui import QIcon, QPixmap, QFont, QDesktopServices, QPainter
+from PyQt6.QtGui import QIcon, QPixmap, QDesktopServices, QPainter
 from PyQt6.QtSvg import QSvgRenderer
 
 
@@ -21,14 +21,6 @@ class AboutDialog(QDialog):
     
     def setup_ui(self):
         """Set up the dialog UI."""
-        # Apply Windows theme styling
-        self.setStyleSheet("""
-            QDialog {
-                background-color: #ffffff;
-                color: #333333;
-                font-family: 'Segoe UI', Arial, sans-serif;
-            }
-        """)
         
         layout = QVBoxLayout(self)
         layout.setSpacing(16)
@@ -50,14 +42,8 @@ class AboutDialog(QDialog):
         title_layout.setSpacing(4)
         
         title_label = QLabel("com0com Manager")
-        title_font = QFont("Segoe UI", 14, QFont.Weight.Bold)
-        title_label.setFont(title_font)
-        title_label.setStyleSheet("color: #0078d4;")
         
         version_label = QLabel("Version 1.0.0")
-        version_font = QFont("Segoe UI", 10)
-        version_label.setFont(version_font)
-        version_label.setStyleSheet("color: #666666;")
         
         title_layout.addWidget(title_label)
         title_layout.addWidget(version_label)
@@ -72,7 +58,6 @@ class AboutDialog(QDialog):
         # Separator line
         separator = QFrame()
         separator.setFrameShape(QFrame.Shape.HLine)
-        separator.setStyleSheet("color: #e1e1e1;")
         layout.addWidget(separator)
         
         # Description text
@@ -82,8 +67,6 @@ class AboutDialog(QDialog):
             "for Windows development and testing."
         )
         description_label.setWordWrap(True)
-        description_label.setFont(QFont("Segoe UI", 9))
-        description_label.setStyleSheet("color: #333333; line-height: 1.4;")
         layout.addWidget(description_label)
         
         # GitHub link section
@@ -107,23 +90,6 @@ class AboutDialog(QDialog):
         self.github_button.setIcon(github_icon)
         self.github_button.setIconSize(self.github_button.size())
         
-        # Style the button with proper hover effects
-        self.github_button.setStyleSheet("""
-            QPushButton {
-                border: none;
-                background-color: transparent;
-                border-radius: 12px;
-                padding: 2px;
-            }
-            QPushButton:hover {
-                background-color: #e8f4fd;
-                border: 1px solid #0078d4;
-            }
-            QPushButton:pressed {
-                background-color: #d1e7f7;
-                border: 1px solid #106ebe;
-            }
-        """)
         
         # Set cursor to pointer on hover
         self.github_button.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -140,24 +106,6 @@ class AboutDialog(QDialog):
         
         close_button = QPushButton("Close")
         close_button.setFixedSize(80, 32)
-        close_button.setStyleSheet("""
-            QPushButton {
-                background-color: #ffffff;
-                border: 1px solid #d9d9d9;
-                border-radius: 0px;
-                padding: 6px 16px;
-                font-size: 11px;
-                font-family: 'Segoe UI', Arial, sans-serif;
-            }
-            QPushButton:hover {
-                background-color: #e8f4fd;
-                border-color: #0078d4;
-            }
-            QPushButton:pressed {
-                background-color: #d1e7f7;
-                border-color: #106ebe;
-            }
-        """)
         close_button.clicked.connect(self.close)
         
         button_layout.addWidget(close_button)
@@ -189,7 +137,7 @@ class AboutDialog(QDialog):
     def open_github_repository(self):
         """Open the GitHub repository in the default browser."""
         # Replace with your actual GitHub repository URL
-        github_url = "https://github.com/your-username/your-repository"
+        github_url = "https://github.com/gregor-nelson/VirtualPortManager"
         QDesktopServices.openUrl(QUrl(github_url))
     
     @staticmethod

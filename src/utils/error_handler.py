@@ -301,7 +301,6 @@ class EnhancedErrorDialog(QDialog):
         else:
             icon_label.setText("ℹ️")
         
-        icon_label.setStyleSheet("font-size: 32px;")
         header_layout.addWidget(icon_label)
         
         # Title and message
@@ -315,7 +314,6 @@ class EnhancedErrorDialog(QDialog):
         
         message_label = QLabel(self.error_info.message)
         message_label.setWordWrap(True)
-        message_label.setStyleSheet("color: #333; margin-top: 5px;")
         
         text_layout.addWidget(title_label)
         text_layout.addWidget(message_label)
@@ -328,7 +326,6 @@ class EnhancedErrorDialog(QDialog):
         # Solutions section
         if self.error_info.solutions:
             solutions_label = QLabel("💡 Suggested Solutions:")
-            solutions_label.setStyleSheet("font-weight: bold; margin-top: 20px; margin-bottom: 10px;")
             layout.addWidget(solutions_label)
             
             for i, solution in enumerate(self.error_info.solutions):
@@ -347,7 +344,6 @@ class EnhancedErrorDialog(QDialog):
             self.details_text.setPlainText(self.error_info.technical_details)
             self.details_text.setMaximumHeight(100)
             self.details_text.setVisible(False)
-            self.details_text.setStyleSheet("background-color: #f8f9fa; border: 1px solid #dee2e6;")
             
             details_layout.addWidget(details_button)
             details_layout.addWidget(self.details_text)
@@ -370,15 +366,6 @@ class EnhancedErrorDialog(QDialog):
     def create_solution_widget(self, solution: ErrorSolution, index: int) -> QWidget:
         """Create a widget for a solution."""
         widget = QWidget()
-        widget.setStyleSheet("""
-            QWidget {
-                background-color: #f8f9fa;
-                border: 1px solid #dee2e6;
-                border-radius: 0px;
-                padding: 10px;
-                margin: 2px;
-            }
-        """)
         
         layout = QHBoxLayout(widget)
         
@@ -386,11 +373,9 @@ class EnhancedErrorDialog(QDialog):
         text_layout = QVBoxLayout()
         
         title_label = QLabel(f"{index + 1}. {solution.title}")
-        title_label.setStyleSheet("font-weight: bold; color: #0078D4;")
         
         desc_label = QLabel(solution.description)
         desc_label.setWordWrap(True)
-        desc_label.setStyleSheet("color: #333; margin-top: 2px;")
         
         text_layout.addWidget(title_label)
         text_layout.addWidget(desc_label)
@@ -447,7 +432,6 @@ class SetupcNotFoundDialog(QDialog):
         header_layout = QHBoxLayout()
         
         icon_label = QLabel("🔧")
-        icon_label.setStyleSheet("font-size: 48px;")
         
         text_layout = QVBoxLayout()
         title_label = QLabel("setupc.exe Not Found")
@@ -470,64 +454,21 @@ class SetupcNotFoundDialog(QDialog):
         
         # Options
         options_label = QLabel("Please choose an option:")
-        options_label.setStyleSheet("font-weight: bold; margin-top: 20px; margin-bottom: 10px;")
         layout.addWidget(options_label)
         
         # Option 1: Download com0com
         download_button = QPushButton("📥 Download and Install com0com")
         download_button.clicked.connect(self.download_com0com)
-        download_button.setStyleSheet("""
-            QPushButton {
-                text-align: left;
-                padding: 10px;
-                background-color: #0078D4;
-                color: white;
-                border: none;
-                border-radius: 0px;
-                margin: 2px;
-            }
-            QPushButton:hover {
-                background-color: #106EBE;
-            }
-        """)
         layout.addWidget(download_button)
         
         # Option 2: Browse for setupc.exe
         browse_button = QPushButton("📁 Browse for Existing setupc.exe")
         browse_button.clicked.connect(self.browse_setupc)
-        browse_button.setStyleSheet("""
-            QPushButton {
-                text-align: left;
-                padding: 10px;
-                background-color: #107C10;
-                color: white;
-                border: none;
-                border-radius: 0px;
-                margin: 2px;
-            }
-            QPushButton:hover {
-                background-color: #0F5F0F;
-            }
-        """)
         layout.addWidget(browse_button)
         
         # Option 3: Run setup wizard
         wizard_button = QPushButton("🧙‍♂️ Run Setup Wizard")
         wizard_button.clicked.connect(self.run_wizard)
-        wizard_button.setStyleSheet("""
-            QPushButton {
-                text-align: left;
-                padding: 10px;
-                background-color: #8E2D88;
-                color: white;
-                border: none;
-                border-radius: 0px;
-                margin: 2px;
-            }
-            QPushButton:hover {
-                background-color: #6D1F68;
-            }
-        """)
         layout.addWidget(wizard_button)
         
         # Information text
@@ -544,15 +485,6 @@ class SetupcNotFoundDialog(QDialog):
         </ul>
         """)
         info_text.setWordWrap(True)
-        info_text.setStyleSheet("""
-            QLabel {
-                background-color: #f8f9fa;
-                border: 1px solid #dee2e6;
-                border-radius: 0px;
-                padding: 10px;
-                margin-top: 10px;
-            }
-        """)
         layout.addWidget(info_text)
         
         # Bottom buttons

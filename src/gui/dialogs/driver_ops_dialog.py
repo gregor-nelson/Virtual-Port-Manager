@@ -5,7 +5,6 @@ from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QFormLayout,
                             QTextEdit, QProgressBar, QDialogButtonBox, QFrame,
                             QScrollArea, QWidget)
 from PyQt6.QtCore import Qt, pyqtSignal, pyqtSlot
-from PyQt6.QtGui import QFont
 
 from ...core.models import DriverInfo, DriverStatus, CommandResult
 
@@ -37,16 +36,11 @@ class DriverOperationsDialog(QDialog):
         
         # Title
         title_label = QLabel("com0com Driver Operations")
-        title_font = QFont()
-        title_font.setPointSize(12)
-        title_font.setBold(True)
-        title_label.setFont(title_font)
         layout.addWidget(title_label)
         
         # Description
         desc_label = QLabel("Manage the com0com virtual serial port driver installation and status.")
         desc_label.setWordWrap(True)
-        desc_label.setStyleSheet("color: gray; margin-bottom: 10px;")
         layout.addWidget(desc_label)
         
         # Create scroll area for main content
@@ -158,13 +152,12 @@ class DriverOperationsDialog(QDialog):
         # Button
         button = QPushButton(title)
         if warning:
-            button.setStyleSheet("QPushButton { color: #d32f2f; font-weight: bold; }")
+            pass
         button.clicked.connect(signal.emit)
         
         # Description
         desc_label = QLabel(description)
         desc_label.setWordWrap(True)
-        desc_label.setStyleSheet("color: gray; font-size: 11px;")
         
         frame_layout.addWidget(button)
         frame_layout.addWidget(desc_label)
@@ -204,13 +197,13 @@ class DriverOperationsDialog(QDialog):
         
         # Update status label styling
         if driver_info.status == DriverStatus.INSTALLED:
-            self.status_label.setStyleSheet("color: green; font-weight: bold;")
+            pass
         elif driver_info.status == DriverStatus.NOT_INSTALLED:
-            self.status_label.setStyleSheet("color: red; font-weight: bold;")
+            pass
         elif driver_info.status == DriverStatus.ERROR:
-            self.status_label.setStyleSheet("color: orange; font-weight: bold;")
+            pass
         else:
-            self.status_label.setStyleSheet("")
+            pass
         
         # Enable/disable buttons based on status
         self.update_button_states(driver_info.status)
