@@ -1,20 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background circle -->
-  <circle cx="32" cy="32" r="30" fill="#0078D4" stroke="#106EBE" stroke-width="2"/>
+  <defs>
+    <linearGradient id="hubGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0078D4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#005A9E;stop-opacity:1" />
+    </linearGradient>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.1)"/>
+    </filter>
+    <filter id="hubShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="rgba(0,0,0,0.2)"/>
+    </filter>
+  </defs>
   
-  <!-- Serial port connectors -->
-  <rect x="12" y="20" width="16" height="8" rx="2" fill="#FFFFFF"/>
-  <rect x="36" y="20" width="16" height="8" rx="2" fill="#FFFFFF"/>
-  <rect x="12" y="36" width="16" height="8" rx="2" fill="#FFFFFF"/>
-  <rect x="36" y="36" width="16" height="8" rx="2" fill="#FFFFFF"/>
+  <!-- Background circle for subtle depth -->
+  <circle cx="32" cy="32" r="30" fill="rgba(0,120,212,0.05)" filter="url(#softShadow)"/>
   
   <!-- Connection lines -->
-  <path d="M28 24 L36 24" stroke="#FFFFFF" stroke-width="2"/>
-  <path d="M28 40 L36 40" stroke="#FFFFFF" stroke-width="2"/>
-  <path d="M20 28 L20 36" stroke="#FFFFFF" stroke-width="2"/>
-  <path d="M44 28 L44 36" stroke="#FFFFFF" stroke-width="2"/>
+  <g stroke="#00BCF2" stroke-width="3" stroke-linecap="round" opacity="0.8">
+    <!-- Top -->
+    <line x1="32" y1="32" x2="32" y2="8"/>
+    <!-- Top-right -->
+    <line x1="32" y1="32" x2="49.86" y2="20"/>
+    <!-- Bottom-right -->
+    <line x1="32" y1="32" x2="49.86" y2="44"/>
+    <!-- Bottom -->
+    <line x1="32" y1="32" x2="32" y2="56"/>
+    <!-- Bottom-left -->
+    <line x1="32" y1="32" x2="14.14" y2="44"/>
+    <!-- Top-left -->
+    <line x1="32" y1="32" x2="14.14" y2="20"/>
+  </g>
   
-  <!-- Text "COM" -->
-  <text x="32" y="54" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#FFFFFF" font-weight="bold">COM</text>
+  <!-- Endpoint circles -->
+  <g fill="#00BCF2" filter="url(#softShadow)">
+    <circle cx="32" cy="8" r="4"/>
+    <circle cx="49.86" cy="20" r="4"/>
+    <circle cx="49.86" cy="44" r="4"/>
+    <circle cx="32" cy="56" r="4"/>
+    <circle cx="14.14" cy="44" r="4"/>
+    <circle cx="14.14" cy="20" r="4"/>
+  </g>
+  
+  <!-- Central hexagonal hub -->
+  <polygon points="32,22 40,26 40,38 32,42 24,38 24,26" 
+           fill="url(#hubGradient)" 
+           stroke="rgba(255,255,255,0.3)" 
+           stroke-width="1"
+           filter="url(#hubShadow)"/>
+  
+  <!-- Subtle highlight on hub -->
+  <polygon points="32,22 38,25 38,35 32,38 26,35 26,25" 
+           fill="rgba(255,255,255,0.15)" 
+           opacity="0.6"/>
+  
+  <!-- Serial port connector inside hub -->
+  <rect x="27" y="28" width="10" height="6" rx="1" 
+        fill="#FFFFFF" 
+        stroke="rgba(0,90,158,0.3)" 
+        stroke-width="0.5"/>
+  
+  <!-- Serial port pins -->
+  <g fill="rgba(0,90,158,0.8)">
+    <circle cx="29" cy="30" r="0.5"/>
+    <circle cx="31" cy="30" r="0.5"/>
+    <circle cx="33" cy="30" r="0.5"/>
+    <circle cx="35" cy="30" r="0.5"/>
+    <circle cx="29" cy="32" r="0.5"/>
+    <circle cx="31" cy="32" r="0.5"/>
+    <circle cx="33" cy="32" r="0.5"/>
+    <circle cx="35" cy="32" r="0.5"/>
+  </g>
+  
 </svg>

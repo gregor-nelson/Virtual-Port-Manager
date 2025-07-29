@@ -1,7 +1,7 @@
 """Application constants and configuration values."""
 import os
 
-APP_NAME = "com0com Manager"
+APP_NAME = "Virtual Port Manager"
 APP_VERSION = "1.0.0"
 
 DEFAULT_SETUPC_PATH = r"C:\Program Files (x86)\com0com\setupc.exe"
@@ -17,8 +17,8 @@ DEFAULT_COM0COM_PATHS = [
 # Alias for backward compatibility
 SETUPC_PATHS = DEFAULT_COM0COM_PATHS
 
-WINDOW_TITLE = "com0com Manager"
-WINDOW_MIN_WIDTH = 800
+WINDOW_TITLE = "Virtual Port Manager"
+WINDOW_MIN_WIDTH = 975
 WINDOW_MIN_HEIGHT = 600
 WINDOW_DEFAULT_WIDTH = 1000
 WINDOW_DEFAULT_HEIGHT = 700

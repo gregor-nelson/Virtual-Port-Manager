@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-com0com GUI Manager - Main Application Entry Point
+Virtual Port Manager - Main Application Entry Point
 A PyQt6-based GUI wrapper for com0com's setupc.exe command-line tool.
 """
 
@@ -15,7 +15,7 @@ from src.utils.constants import APP_NAME, APP_VERSION
 
 
 def main():
-    """Initialize and run the com0com GUI application."""
+    """Initialize and run the Virtual Port Manager application."""
     # Disable dark mode detection
     os.environ['QT_QPA_PLATFORMTHEME'] = ''
     
@@ -23,7 +23,7 @@ def main():
     app = QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
     app.setApplicationVersion(APP_VERSION)
-    app.setOrganizationName("com0com GUI")
+    app.setOrganizationName("Virtual Port Manager")
     
     # Set native Windows style for best fusiontegration
     app.setStyle('fusion')

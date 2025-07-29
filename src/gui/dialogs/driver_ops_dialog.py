@@ -62,8 +62,6 @@ class DriverOperationsDialog(QDialog):
         self.status_label = QLabel("Unknown")
         status_layout.addRow("Driver Status:", self.status_label)
         
-        self.version_label = QLabel("Unknown")
-        status_layout.addRow("Version:", self.version_label)
         
         self.path_label = QLabel("Unknown")
         self.path_label.setWordWrap(True)
@@ -192,7 +190,6 @@ class DriverOperationsDialog(QDialog):
         
         # Update status labels
         self.status_label.setText(driver_info.status.value)
-        self.version_label.setText(driver_info.version or "Unknown")
         self.path_label.setText(driver_info.install_path or "Unknown")
         
         # Update status label styling
