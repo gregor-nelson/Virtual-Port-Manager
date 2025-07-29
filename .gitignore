@@ -1,0 +1,29 @@
+# Build directories
+build/
+dist/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Environment variables
+.env
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# NPM cache (AppData)
+%APPDATA%/npm-cache/
